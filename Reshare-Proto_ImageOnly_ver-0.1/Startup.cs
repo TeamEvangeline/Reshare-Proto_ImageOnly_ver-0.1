@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Reshare_Proto_ImageOnly_ver_0._1.Repository;
+using Reshare_Proto_ImageOnly_ver_0._1.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +36,16 @@ namespace Reshare_Proto_ImageOnly_ver_0._1
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
             services.AddControllers();
+
+            // Dependency Injection - Repository
+            services.AddTransient<IImageRepo, ImageRepo>();
+
+            // Dependency Injection - Database Context
+            services.AddDbContext<ImageContext>(option => option.UseSqlServer(Configuration.GetConnectionString("ImageConnectionString")));
+
+            // Automapper
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Reshare_Proto_ImageOnly_ver_0._1", Version = "v1" });
