@@ -13,6 +13,8 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Reshare_Proto_ImageOnly_ver_0._1.Repository;
 using Reshare_Proto_ImageOnly_ver_0._1.Repository.Interfaces;
+using Reshare_Proto_ImageOnly_ver_0._1.Services;
+using Reshare_Proto_ImageOnly_ver_0._1.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +38,9 @@ namespace Reshare_Proto_ImageOnly_ver_0._1
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
             services.AddControllers();
+
+            // Dependency Injection - Services
+            services.AddTransient<IImageService, ImageService>();
 
             // Dependency Injection - Repository
             services.AddTransient<IImageRepo, ImageRepo>();
